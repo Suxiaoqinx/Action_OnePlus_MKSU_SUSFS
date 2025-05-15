@@ -74,6 +74,10 @@ on:
          - "5.15"
          - "6.1"
          - "6.6"
+      KERNEL_NAME:
+        description: "修改内核名称"
+        required: true
+        default: '-android14-11-o-g1132d864665d'
       BUILD_METHOD:
         type: choice
         description: "编译方式"
@@ -331,6 +335,13 @@ jobs:
             fi
           fi
 
+      - name: 添加自定义名称
+        run: |
+          cd kernel_workspace/kernel_platform
+          sed -i '$s|echo "\$res"|echo "\${{ github.event.inputs.KERNEL_NAME }}"|' common/scripts/setlocalversion
+          git add -A
+          git commit -m "Force remove -dirty suffix from kernel version"
+
       - name: Build kernel
         if: ${{ github.event.inputs.CPU == 'sm8650' || github.event.inputs.CPU == 'sm7675' }}
         run: |
@@ -437,6 +448,13 @@ jobs:
         run: |
           wget https://github.com/sidex15/ksu_module_susfs/releases/latest/download/ksu_module_susfs_1.5.2+.zip
           cp ksu_module_susfs_1.5.2+.zip ./AnyKernel3/
+
+      # 下载 ZRAM算法附加 模块（Release）
+      - name: Download Latest SUSFS Module from Release
+        if: ${{ github.event.inputs.SUSFS_CI == 'false' }}
+        run: |
+          curl -LO https://raw.githubusercontent.com/Suxiaoqinx/kernel_manifest_OnePlus_Sukisu_Ultra/main/zram.zip
+          cp zram.zip ./AnyKernel3/
 
       - name: Set suffix
         id: suffix
