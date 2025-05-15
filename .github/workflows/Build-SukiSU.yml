@@ -449,8 +449,8 @@ jobs:
           wget https://github.com/sidex15/ksu_module_susfs/releases/latest/download/ksu_module_susfs_1.5.2+.zip
           cp ksu_module_susfs_1.5.2+.zip ./AnyKernel3/
 
-      # 下载 ZRAM算法附加 模块（Release）
-      - name: Download Latest SUSFS Module from Release
+      # 下载 ZRAM算法附加 模块
+      - name: Download Latest Zram Module
         if: ${{ github.event.inputs.SUSFS_CI == 'false' }}
         run: |
           curl -LO https://raw.githubusercontent.com/Suxiaoqinx/kernel_manifest_OnePlus_Sukisu_Ultra/main/zram.zip
